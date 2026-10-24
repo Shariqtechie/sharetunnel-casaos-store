@@ -1,0 +1,89 @@
+# ShareTunnel for CasaOS: https://github.com/Shariqtechie/Sharetunnel
+name: sharetunnel
+services:
+  sharetunnel:
+    container_name: sharetunnel # must stay "sharetunnel" (used by the built-in updater)
+    image: ghcr.io/shariqtechie/sharetunnel:latest
+    labels:
+      icon: https://raw.githubusercontent.com/Shariqtechie/sharetunnel-casaos-store/main/Apps/ShareTunnel/icon.png
+    network_mode: host # the panel runs on port 9099 and reaches Nextcloud on localhost
+    restart: unless-stopped
+    environment:
+      PANEL_PASSWORD: change-me
+      PANEL_PORT: "9099"
+      TZ: $TZ
+      SELF_CONTAINER: sharetunnel
+      NC_CONTAINER: nextcloud
+      NC_URL: http://localhost:7580
+      DB_CONTAINER: db-nextcloud
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+      - type: bind
+        source: /DATA/AppData/$AppID/data
+        target: /data
+    x-casaos:
+      envs:
+        - container: PANEL_PASSWORD
+          description:
+            en_us: "REQUIRED: choose your own password for the ShareTunnel panel (not 'change-me')."
+        - container: PANEL_PORT
+          description:
+            en_us: Port of the web panel (default 9099).
+        - container: TZ
+          description:
+            en_us: Your time zone, used for the automatic update hour.
+        - container: NC_CONTAINER
+          description:
+            en_us: Name of your Nextcloud container. You can also change this later on the panel's Setup page.
+        - container: NC_URL
+          description:
+            en_us: Where Nextcloud listens on this server (the CasaOS Nextcloud app uses port 7580).
+        - container: DB_CONTAINER
+          description:
+            en_us: Name of your PostgreSQL container (used to list your shared links).
+      volumes:
+        - container: /var/run/docker.sock
+          description:
+            en_us: Lets ShareTunnel talk to Nextcloud and Docker on this server.
+        - container: /data
+          description:
+            en_us: ShareTunnel settings (survive updates and reboots).
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  author: Shariqtechie
+  category: Networking
+  description:
+    en_us: |
+      Share files from your self-hosted Nextcloud with anyone on the internet in one click. No domain, no port forwarding.
+
+      ShareTunnel opens a secure Cloudflare tunnel to Nextcloud, adds the temporary address to Nextcloud's trusted domains for you, and lists every public share link in a clean dashboard with a Copy link button. It restarts the tunnel if it drops, checks its own setup and explains problems in plain words, and updates itself from GitHub Releases.
+
+      **Needs:** Nextcloud running in Docker with a PostgreSQL database (for example the Nextcloud app from the CasaOS store).
+      **Good to know:** the free Cloudflare address changes every time the tunnel restarts. The panel always shows the current link.
+  developer: Shariqtechie
+  icon: https://raw.githubusercontent.com/Shariqtechie/sharetunnel-casaos-store/main/Apps/ShareTunnel/icon.png
+  index: /
+  main: sharetunnel
+  port_map: "9099"
+  project_url: https://github.com/Shariqtechie/Sharetunnel
+  screenshot_link:
+    - https://raw.githubusercontent.com/Shariqtechie/Sharetunnel/main/docs/screenshots/dash-dark.png
+    - https://raw.githubusercontent.com/Shariqtechie/Sharetunnel/main/docs/screenshots/shares-dark.png
+    - https://raw.githubusercontent.com/Shariqtechie/Sharetunnel/main/docs/screenshots/updates-dark.png
+  store_app_id: sharetunnel
+  tagline:
+    en_us: Share your Nextcloud files with anyone, in one click
+  thumbnail: https://raw.githubusercontent.com/Shariqtechie/sharetunnel-casaos-store/main/Apps/ShareTunnel/icon.png
+  tips:
+    before_install:
+      en_us: |
+        1. Set a password in the PANEL_PASSWORD field. ShareTunnel will not start with the default.
+        2. Nextcloud must already be installed (with its PostgreSQL database).
+        3. After installing, open the app and press Start tunnel. If a name or port is different on your server, the Setup page helps you fix it.
+  title:
+    en_us: ShareTunnel
+  version: "0.3.0"
