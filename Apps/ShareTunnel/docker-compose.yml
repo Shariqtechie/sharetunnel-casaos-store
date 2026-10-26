@@ -3,7 +3,7 @@ name: sharetunnel
 services:
   sharetunnel:
     container_name: sharetunnel # must stay "sharetunnel" (used by the built-in updater)
-    image: ghcr.io/shariqtechie/sharetunnel:0.3.1 # pinned: CasaOS offers an Update when this changes
+    image: ghcr.io/shariqtechie/sharetunnel:0.3.2 # pinned: CasaOS offers an Update when this changes
     labels:
       icon: https://raw.githubusercontent.com/Shariqtechie/sharetunnel-casaos-store/main/Apps/ShareTunnel/icon.png
     network_mode: host # the panel runs on port 9099 and reaches Nextcloud on localhost
@@ -87,4 +87,4 @@ x-casaos:
         4. To update later, open the app's menu in CasaOS and choose Update.
   title:
     en_us: ShareTunnel
-  version: "0.3.1"
+  version: "0.3.2"
